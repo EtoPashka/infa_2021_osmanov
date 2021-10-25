@@ -15,7 +15,7 @@ start_text = pygame.font.SysFont('Comic Sans MS', 30)
 
 FPS = 30                  
 BORDERS = (1200, 1000)      #границы области игры
-DIFFICULTY = 1              #сложность игры (множитель скорости передвижения)
+DIFFICULTY = 1              #сложность игры (множитель скорости передвижения, приписан в классах объектов как dt)
 NUMBER_OF_BALLS = 5         #общее количество шариков
 FAIL_SCORE = 50             #сколько очков отнимется за промах
 GAME_TIME = 10              #время на игру в секундах
@@ -111,7 +111,8 @@ class Special:
         self.color = COLORS[randint(0, len(COLORS)-1)]
 
     def collision(self, borders):
-        '''проверяем объект на столкновение с границей'''
+        '''проверяем объект на столкновение с границей
+        так как прямоугольники двигаются непредсказуемо, то при столкновении их сразу возвращает на границу'''
         if self.coord[0] <= 0 or self.coord[0] >= borders[0] - self.bord[0]:
             self.velocity[0] = - self.velocity[0]
             if self.coord[0] <= 0:
@@ -160,7 +161,7 @@ class Game:
         
 
     def default_object_create(self, name_of_obj):
-        '''создаёт объект игры'''
+        '''создаёт объект игры: шар или прямоугольник, в зависимости от переданного имени'''
         if name_of_obj == BALL:
             coordinates = [randint(MAX_R, BORDERS[0] - MAX_R), randint(MAX_R, BORDERS[1] - MAX_R)]
             velocity = [randint(MIN_V, MAX_V)*choice(range(-1, 2, 2)), randint(MIN_V, MAX_V)*choice(range(-1, 2, 2))]
@@ -176,7 +177,8 @@ class Game:
             return Special(coordinates, velocity, color, bord)
 
     def init_pool(self, num_of_obj):
-        '''инициализация списка объектов'''
+        '''инициализация списка объектов игры (того, что будет на экране)
+        инициализируется главный объект (первый из names)'''
         for i in range(num_of_obj):
             self.pool.append(self.default_object_create(self.names[0]))
 
@@ -196,7 +198,11 @@ class Game:
         screen.blit(textsurface,(0, BORDERS[1] -  50))
 
     def click_respond(self, event):
-        '''реакция на клик мыши'''
+        '''реакция на клик мыши
+        если попадает по объекту, то он удаляется из пула и создаётся новый по вероятности выбора из names
+        если клик попал по объекту, то за него даются очки
+        если клик не попал по объекту, то очки снимаются
+        изменения по очкам записываются в лог'''
         no_click = True
         for object in self.pool:
             if object.event(event):
@@ -218,7 +224,7 @@ class Game:
 
 
 NAMES = [BALL, RECT]
-CHANCES = [5, 2]
+CHANCES = [5, 2]       #в среднем на каждые 5 первых объектов из NAMES будет создано 2 вторых объекта из NAMES
 
 game = Game(DIFFICULTY, BORDERS, NAMES, CHANCES, PLAYER_NAME)
 game.init_pool(NUMBER_OF_BALLS)
@@ -269,6 +275,8 @@ while not finished:
     if pygame.time.get_ticks() - start_time >= GAME_TIME * 1000:          #проверка таймера
         finished = True
 
+game.log.append('Final score: ' + str(game.score) + '!')
+
 textsurface = start_text.render('Final score: ' + str(game.score) + '!  Press LMB to quit and save', False, WHITE)
 screen.blit(textsurface,(0,0))
 pygame.display.update()
@@ -283,7 +291,6 @@ while not finished:
 pygame.quit()
 pygame.font.quit()
 
-game.log.append('Final score: ' + str(game.score) + '!')
 
 #Простенький лог
 with open("last_game_log.txt", 'w') as f:    
