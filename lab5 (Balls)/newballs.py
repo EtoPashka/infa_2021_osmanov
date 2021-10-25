@@ -237,7 +237,8 @@ while not finished:
             finished = True
         if event.type == pygame.QUIT:
             pygame.quit()
-
+            pygame.font.quit()
+            quit()
 
 
 pygame.display.update()
@@ -257,7 +258,9 @@ while not finished:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            finished = True
+            pygame.quit()
+            pygame.font.quit()
+            quit()
         elif event.type == pygame.MOUSEBUTTONDOWN:
             game.click_respond(event)
     
@@ -266,11 +269,21 @@ while not finished:
     if pygame.time.get_ticks() - start_time >= GAME_TIME * 1000:          #проверка таймера
         finished = True
 
+textsurface = start_text.render('Final score: ' + str(game.score) + '!  Press LMB to quit and save', False, WHITE)
+screen.blit(textsurface,(0,0))
+pygame.display.update()
+
+finished = False
+
+while not finished:
+    for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.QUIT:
+            finished = True
+
 pygame.quit()
 pygame.font.quit()
 
 game.log.append('Final score: ' + str(game.score) + '!')
-
 
 #Простенький лог
 with open("last_game_log.txt", 'w') as f:    
@@ -287,6 +300,8 @@ loaded['games count'] += 1
 
 with open("best.json", 'w') as f:
     json.dump(loaded, f)
+
+
 
 #Тут была запись в best.txt
 '''
