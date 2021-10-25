@@ -1,0 +1,10 @@
+pdn, up, up, rt, dn, dn, lt, pup, rt, mv
+pup, up, pdn, dup, dn, dn, pup, mv
+pup, up, up, pdn, rt, dn, ddn, rt, pup, mv
+pdn, dup, lt, dup, lt, pup, dn, dn, rt, mv
+pup, up, up, pdn, dn, rt, pup, up, pdn, dn, dn, pup, mv
+pdn, rt, up, lt, up, rt, pup, dn, dn, mv
+pup, up, pdn, rt, dn, lt, up, dup, pup, dn, dn, mv
+pdn, up, dup, lt, pup, dn, dn, rt, mv
+pdn, up, up, rt, dn, dn, lt, pup, up, pdn, rt, pup, dn, mv
+pdn, dup, up, lt, dn, rt, pup, dn, mv
