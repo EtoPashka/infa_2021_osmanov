@@ -6,3 +6,4 @@ lab 1 missing task
 lab 2 (all turtle tasks) done
 lab 3 (draw gallery) done
 lab 5 (ball game) done
+lab 6 done (gun)
